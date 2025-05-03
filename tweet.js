@@ -41,7 +41,7 @@ async function sendTweets(tweets) {
             // Split on lines that start with a number and a dot (e.g., "1. ...")
             tweetArray = tweets.split(/(?:^|\n)\d+\.\s*/).filter(Boolean);
         }
-        
+        console.log('Tweet array:', tweetArray);
         // Send tweets in sequence
         for (const tweet of tweetArray) {
             const cleanedTweet = tweet
