@@ -35,7 +35,7 @@ jobs:
       - name: Run script
         if: steps.randomize.outputs.run_job == 'true'
         env:
-          auth_token: ${{ secrets.auth_token }}
-          ct0: ${{ secrets.ct0 }}
-          twid: ${{ secrets.twid }}
+          auth_token: ${{ secrets.AUTH_TOKEN }}
+          ct0: ${{ secrets.CT0 }}
+          twid: ${{ secrets.TWID }}
         run: node index.js 

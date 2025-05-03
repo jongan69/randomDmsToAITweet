@@ -29,7 +29,6 @@ async function sendTweets(tweets) {
         `ct0=${process.env.ct0}; domain=.twitter.com; path=/`,
         `twid=${process.env.twid}; domain=.twitter.com; path=/`
     ];
-    console.log('Formatted cookies:', formattedCookies);
     
     try {
         await scraper.setCookies(formattedCookies);
