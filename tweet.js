@@ -50,8 +50,11 @@ async function sendTweets(tweets) {
                 .replace(/[\r\n]/g, '');               // Remove newlines
             console.log('About to send tweet:', cleanedTweet);
             await sendSingleTweet(cleanedTweet, scraper);
-            // Add a small delay between tweets to avoid rate limiting
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            // Add a randomized delay between tweets to avoid rate limiting
+            const minDelay = 2000; // 2 seconds
+            const maxDelay = 5000; // 5 seconds
+            const randomDelay = Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
+            await new Promise(resolve => setTimeout(resolve, randomDelay));
         }
         
         console.log(`Successfully sent ${tweetArray.length} tweet(s)`);
