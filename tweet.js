@@ -29,10 +29,10 @@ async function sendTweets(tweets) {
         `ct0=${process.env.ct0}; domain=.twitter.com; path=/`,
         `twid=${process.env.twid}; domain=.twitter.com; path=/`
     ];
-    
+
     try {
         await scraper.setCookies(formattedCookies);
-        
+
         // If a single string is passed, convert it to an array
         let tweetArray;
         if (Array.isArray(tweets)) {
@@ -55,7 +55,7 @@ async function sendTweets(tweets) {
             const randomDelay = Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
             await new Promise(resolve => setTimeout(resolve, randomDelay));
         }
-        
+
         console.log(`Successfully sent ${tweetArray.length} tweet(s)`);
         return { success: true, message: `Successfully sent ${tweetArray.length} tweet(s)` };
     } catch (error) {
