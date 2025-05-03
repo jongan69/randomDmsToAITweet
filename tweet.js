@@ -38,8 +38,11 @@ async function sendTweets(tweets) {
         if (Array.isArray(tweets)) {
             tweetArray = tweets;
         } else {
-            // Split on lines that start with a number and a dot or a dash and a space
-            tweetArray = tweets.split(/\n(?:\d+\.\s+|-\s+)/).map(t => t.replace(/^(\d+\.\s+|-\s+)/, '')).filter(Boolean);
+            // Split on newlines followed by up to 3 non-alphanumeric characters and optional whitespace
+            tweetArray = tweets
+                .split(/\n[^\w\n]{0,3}\s*/)
+                .map(t => t.replace(/^[^\w]*\s*/, ''))
+                .filter(Boolean);
         }
         console.log('Tweet array:', tweetArray);
         // Send tweets in sequence
@@ -48,7 +51,7 @@ async function sendTweets(tweets) {
                 .replace(/^(?:[0-9]+\.\s*|-+\s*)/, '') // Remove leading number-dot or dash
                 .replace(/[\r\n]/g, '');               // Remove newlines
             console.log('About to send tweet:', cleanedTweet);
-            await sendSingleTweet(cleanedTweet, scraper);
+            // await sendSingleTweet(cleanedTweet, scraper);
             // Add a randomized delay between tweets to avoid rate limiting
             const minDelay = 2000; // 2 seconds
             const maxDelay = 5000; // 5 seconds
