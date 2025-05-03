@@ -51,7 +51,7 @@ async function sendTweets(tweets) {
                 .replace(/^(?:[0-9]+\.\s*|-+\s*)/, '') // Remove leading number-dot or dash
                 .replace(/[\r\n]/g, '');               // Remove newlines
             console.log('About to send tweet:', cleanedTweet);
-            // await sendSingleTweet(cleanedTweet, scraper);
+            await sendSingleTweet(cleanedTweet, scraper);
             // Add a randomized delay between tweets to avoid rate limiting
             const minDelay = 2000; // 2 seconds
             const maxDelay = 5000; // 5 seconds
