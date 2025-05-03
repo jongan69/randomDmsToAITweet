@@ -11,12 +11,18 @@ export async function getDms() {
         `ct0=${process.env.ct0}; domain=.twitter.com; path=/`,
         `twid=${process.env.twid}; domain=.twitter.com; path=/`
     ];
-    
+
     try {
         await scraper.setCookies(formattedCookies);
         const me = await scraper.me();
         const userId = me.userId;
-        const dms = await scraper.getDirectMessageConversations(userId, 10);
+        let dms;
+        if (!userId) {
+            console.error('No user ID found');
+            dms = await scraper.getDirectMessageConversations(50);
+        } else {
+            dms = await scraper.getDirectMessageConversations(userId, 50);
+        }
         // dms is expected to be an array of DirectMessageConversation objects
         // Each conversation has a messages array, each message has a text property
         // Flatten all messages from all conversations, sort by createdAt descending, and return just the text
@@ -28,7 +34,12 @@ export async function getDms() {
             console.log('Sample message object:', allMessages[0]);
         }
         // Filter out messages sent by the authenticated user
-        const receivedMessages = allMessages.filter(msg => msg.senderId !== userId);
+        let receivedMessages;
+        if (userId) {
+            receivedMessages = allMessages.filter(msg => msg.senderId !== userId);
+        } else {
+            receivedMessages = allMessages;
+        }
         // Filter out reaction messages (e.g., messages starting with 'Reacted to')
         const nonReactionMessages = receivedMessages.filter(msg => !/^Reacted to /i.test(msg.text));
         const messageTexts = nonReactionMessages.map(msg => msg.text);
