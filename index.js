@@ -5,4 +5,4 @@ import { sendTweets } from './tweet.js';
 const dms = await getDms();
 const summary = await aiDmSummary(dms);
 console.log(summary);
-// await sendTweets(summary.toString());
+await sendTweets(summary.toString());
