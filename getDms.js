@@ -15,7 +15,7 @@ export async function getDms() {
     try {
         await scraper.setCookies(formattedCookies);
         const me = await scraper.me();
-        const userId = me.userId;
+        const userId = me?.userId;
         let dms;
         if (!userId) {
             console.error('No user ID found');
@@ -47,6 +47,10 @@ export async function getDms() {
         const messageTexts = nonReactionMessages.map(msg => msg.text);
         // Filter out messages that are only URLs
         const filteredMessages = messageTexts.filter(msg => !/^https?:\/\/\S+$/i.test(msg));
+        if (filteredMessages.length === 0) {
+            console.log('No messages found');
+            return [];
+        }
         return filteredMessages;
     } catch (error) {
         console.error('Error in getDms:', error);
