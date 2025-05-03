@@ -36,8 +36,10 @@ export async function getDms() {
         // Filter out messages sent by the authenticated user
         let receivedMessages;
         if (userId) {
+            console.log('User ID found!',);
             receivedMessages = allMessages.filter(msg => msg.senderId !== userId);
         } else {
+            console.log('No user ID found, using all messages');
             receivedMessages = allMessages;
         }
         // Filter out reaction messages (e.g., messages starting with 'Reacted to')
