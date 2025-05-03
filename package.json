@@ -1,0 +1,16 @@
+{
+  "name": "dmtoaitweet",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "getDms.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "agent-twitter-client": "^0.0.18",
+    "dotenv": "^16.5.0"
+  }
+}
