@@ -19,9 +19,9 @@ export async function getDms() {
         let dms;
         if (!userId) {
             console.error('No user ID found');
-            dms = await scraper.getDirectMessageConversations(50);
+            dms = await scraper.getDirectMessageConversations(20);
         } else {
-            dms = await scraper.getDirectMessageConversations(userId, 50);
+            dms = await scraper.getDirectMessageConversations(userId, 20);
         }
         // dms is expected to be an array of DirectMessageConversation objects
         // Each conversation has a messages array, each message has a text property
