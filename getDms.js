@@ -19,9 +19,9 @@ export async function getDms() {
         let dms;
         if (!userId) {
             console.error('No user ID found');
-            dms = await scraper.getDirectMessageConversations(20);
+            dms = await scraper.getDirectMessageConversations(100);
         } else {
-            dms = await scraper.getDirectMessageConversations(userId, 20);
+            dms = await scraper.getDirectMessageConversations(userId, 100);
         }
         // dms is expected to be an array of DirectMessageConversation objects
         // Each conversation has a messages array, each message has a text property
@@ -47,11 +47,21 @@ export async function getDms() {
         const messageTexts = nonReactionMessages.map(msg => msg.text);
         // Filter out messages that are only URLs
         const filteredMessages = messageTexts.filter(msg => !/^https?:\/\/\S+$/i.test(msg));
-        if (filteredMessages.length === 0) {
-            console.log('No messages found');
+        // Filter messages to only include those from the last 24 hours
+        const now = new Date();
+        const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+        const recentMessages = nonReactionMessages.filter(msg => {
+            const createdAt = new Date(Number(msg.createdAt));
+            return createdAt >= oneDayAgo;
+        });
+        const recentMessageTexts = recentMessages
+            .map(msg => msg.text)
+            .filter(msg => !/^https?:\/\/\S+$/i.test(msg));
+        if (recentMessageTexts.length === 0) {
+            console.log('No messages found from the last 24 hours');
             return [];
         }
-        return filteredMessages;
+        return recentMessageTexts;
     } catch (error) {
         console.error('Error in getDms:', error);
         return [];
@@ -59,4 +69,4 @@ export async function getDms() {
 }
 
 // Example usage:
-// getDms().then(console.log);
+getDms().then(console.log);
