@@ -69,4 +69,4 @@ export async function getDms() {
 }
 
 // Example usage:
-getDms().then(console.log);
+// getDms().then(console.log);
