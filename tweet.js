@@ -49,7 +49,8 @@ async function sendTweets(tweets) {
         for (const tweet of tweetArray) {
             const cleanedTweet = tweet
                 .replace(/^(?:[0-9]+\.\s*|-+\s*)/, '') // Remove leading number-dot or dash
-                .replace(/[\r\n]/g, '');               // Remove newlines
+                .replace(/[\r\n]/g, '')               // Remove newlines
+                .replace(/\*/g, '');                   // Remove all asterisks
             console.log('About to send tweet:', cleanedTweet);
             await sendSingleTweet(cleanedTweet, scraper);
             // Add a randomized delay between tweets to avoid rate limiting
