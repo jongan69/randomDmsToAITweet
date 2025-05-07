@@ -25,8 +25,10 @@ export async function getDms() {
         }
         // dms is expected to be an array of DirectMessageConversation objects
         // Each conversation has a messages array, each message has a text property
-        // Flatten all messages from all conversations, sort by createdAt descending, and return just the text
-        const allMessages = (dms.conversations || [])
+        // Only include conversations with more than 2 participants
+        const groupConversations = (dms.conversations || []).filter(convo => Array.isArray(convo.participants) && convo.participants.length > 2);
+        // Flatten all messages from all group conversations, sort by createdAt descending, and return just the text
+        const allMessages = groupConversations
             .flatMap(convo => convo.messages)
             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         // Log the first message object to inspect its properties
@@ -36,17 +38,17 @@ export async function getDms() {
         // Filter out messages sent by the authenticated user
         let receivedMessages;
         if (userId) {
-            console.log('User ID found!',);
+            console.log('User ID found!');
             receivedMessages = allMessages.filter(msg => msg.senderId !== userId);
         } else {
             console.log('No user ID found, using all messages');
             receivedMessages = allMessages;
         }
-        // Filter out reaction messages (e.g., messages starting with 'Reacted to')
-        const nonReactionMessages = receivedMessages.filter(msg => !/^Reacted to /i.test(msg.text));
-        const messageTexts = nonReactionMessages.map(msg => msg.text);
-        // Filter out messages that are only URLs
-        const filteredMessages = messageTexts.filter(msg => !/^https?:\/\/\S+$/i.test(msg));
+        // Filter out reaction messages (e.g., messages starting with 'Reacted to') and URLs
+        const nonReactionMessages = receivedMessages
+            .filter(msg => !/^Reacted to /i.test(msg.text))
+            .filter(msg => !/^https?:\/\/\S+$/i.test(msg.text));
+
         // Filter messages to only include those from the last 24 hours
         const now = new Date();
         const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
@@ -55,7 +57,7 @@ export async function getDms() {
             return createdAt >= oneDayAgo;
         });
         const recentMessageTexts = recentMessages
-            .map(msg => msg.text)
+            .map(msg => msg.text.replace(/\n/g, ' '))
             .filter(msg => !/^https?:\/\/\S+$/i.test(msg));
         if (recentMessageTexts.length === 0) {
             console.log('No messages found from the last 24 hours');
@@ -69,4 +71,4 @@ export async function getDms() {
 }
 
 // Example usage:
-// getDms().then(console.log);
+getDms().then(console.log);
